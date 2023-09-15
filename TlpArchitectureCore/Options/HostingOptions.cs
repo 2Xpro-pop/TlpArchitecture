@@ -7,13 +7,19 @@ using System.Threading.Tasks;
 namespace TlpArchitectureCore.Options;
 public class HostingOptions
 {
-    public int AvailableRam
+    public int MaxAvailableRam
     {
         get; set;
     }
 
-    public int AvailableDisk
+    public int MaxAvailableDisk
     {
         get; set;
     }
+
+    public string RabbitMqHost
+    {
+        get; set;
+    } = null!;
+
 }

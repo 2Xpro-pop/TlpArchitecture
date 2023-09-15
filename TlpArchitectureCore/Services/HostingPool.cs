@@ -11,7 +11,7 @@ using TlpArchitectureCore.Options;
 namespace TlpArchitectureCore.Services;
 public class HostingPool
 {
-    private readonly List<Quota> _rented = new();
+    private readonly List<MemoryQuota> _rented = new();
 
     public HostingPool(IOptions<HostingOptions> hostingOptions)
     {
@@ -34,14 +34,14 @@ public class HostingPool
         return AvailableRam >= ram && AvailableDisk >= disk;
     }
 
-    public Quota? TryRent(int ram, int disk)
+    public MemoryQuota? TryRent(int ram, int disk)
     {
         if (IsAvailable(ram, disk))
         {
             AvailableRam -= ram;
             AvailableDisk -= disk;
 
-            var quota = new Quota(ram, disk);
+            var quota = new MemoryQuota(ram, disk);
 
             _rented.Add(quota);
 
@@ -50,7 +50,7 @@ public class HostingPool
         return null;
     }
 
-    public void Return(Quota quota)
+    public void Return(MemoryQuota quota)
     {
         if (_rented.Remove(quota))
         {

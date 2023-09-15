@@ -5,27 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TlpArchitectureCore.Models;
-public readonly struct Quota
+public class Quota
 {
-    public Guid Id
+    public int Id
     {
-        get;
-    } = Guid.NewGuid();
-    public int Ram
-    {
-        get;
+        get; set;
     }
 
-    public int Disk
+    /// <summary>
+    /// in megabytes
+    /// </summary>
+    public int RamUsage
     {
-        get;
+        get; set;
     }
 
-    public Quota(int ram, int disk)
+    /// <summary>
+    /// in megabytes
+    /// </summary>
+    public int DiskUsage
     {
-        Ram = ram;
-        Disk = disk;
+        get; set;
     }
 
-    public override int GetHashCode() => Id.GetHashCode();
+    /// <summary>
+    /// in days
+    /// </summary>
+    public double Duration
+    {
+        get; set;
+    }
+
+    /// <summary>
+    /// in days
+    /// </summary>
+    public double Pause
+    {
+        get; set;
+    }
 }

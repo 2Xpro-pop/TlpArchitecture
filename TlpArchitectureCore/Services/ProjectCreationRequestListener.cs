@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using TlpArchitectureCore.HostedService;
@@ -12,22 +13,22 @@ using TlpArchitectureCore.Models;
 namespace TlpArchitectureCore.Services;
 public sealed class ProjectCreationRequestListener : IProjectCreateRequestListener, IDisposable
 {
-    private readonly ProjectCollection _projectCollection;
     private readonly IQuotaService _quotaService;
     private readonly HostingPool _hostingPool;
     private readonly ILogger _logger;
     private readonly IConnection _connection;
     private readonly IModel _channel;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ProjectCreationRequestListener(ProjectCollection projectCollection, IQuotaService quotaService, HostingPool hostingPool, ILogger<ProjectCreationRequestListener> logger, IConnection connection)
+    public ProjectCreationRequestListener(IQuotaService quotaService, HostingPool hostingPool, ILogger<ProjectCreationRequestListener> logger, IConnection connection, IServiceScopeFactory serviceScopeFactory)
     {
-        _projectCollection = projectCollection;
         _quotaService = quotaService;
         _hostingPool = hostingPool;
         _logger = logger;
         _connection = connection;
         _channel = _connection.CreateModel();
         _channel.QueueDeclare(RabbitMqListener.ProjectCreationResultsQueue, false, false, false, null);
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     public async Task<bool> HandleAsync(ProjectCreationMessage projectCreationMessage)
@@ -82,7 +83,10 @@ public sealed class ProjectCreationRequestListener : IProjectCreateRequestListen
             MemoryQuota = memoryQuota
         };
 
-        _projectCollection.Add(project);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var projectCollection = scope.ServiceProvider.GetRequiredService<IProjectService>();
+
+        await projectCollection.CreateProjectAsync(project);
 
         message = new ProjectCreationResultMessage()
         {
@@ -99,6 +103,8 @@ public sealed class ProjectCreationRequestListener : IProjectCreateRequestListen
         _logger.LogInformation("Project {ProjectName} created", projectCreationMessage.Name);
 
         return true;
+
+
     }
 
     public void Dispose()

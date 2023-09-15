@@ -47,6 +47,7 @@ public static class ServiceCollectionRabbitMqListenerExtensions
         services.TryAddSingleton<HostingPool>();
         services.TryAddSingleton<ProjectCollection>();
         services.TryAddSingleton<IProjectCreateRequestListener, ProjectCreationRequestListener>();
+        services.TryAddScoped<IProjectService, ProjectService>();
 
         return services;
     }

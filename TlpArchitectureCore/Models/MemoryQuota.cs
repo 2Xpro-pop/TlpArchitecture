@@ -10,6 +10,7 @@ namespace TlpArchitectureCore.Models;
 /// <summary>
 /// It's quota for memory usage only.
 /// When project done this struct will return to pool.
+/// <see cref="HostingPool"/>
 /// </summary>
 public readonly struct MemoryQuota
 {

@@ -12,7 +12,7 @@ public class HostingOptions
         get; set;
     }
 
-    public int MaxAvailableDisk
+    public int MaxAvailableDiskSpace
     {
         get; set;
     }

@@ -16,7 +16,9 @@ public class HostingPool
     public HostingPool(IOptions<HostingOptions> hostingOptions)
     {
         AvailableRam = hostingOptions.Value.MaxAvailableRam;
-        AvailableDisk = hostingOptions.Value.MaxAvailableDisk;
+        AvailableDisk = hostingOptions.Value.MaxAvailableDiskSpace;
+
+        MemoryQuota.DefaultPool = this;
     }
 
     public int AvailableRam

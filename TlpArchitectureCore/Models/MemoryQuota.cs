@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TlpArchitectureCore.Services;
 
 namespace TlpArchitectureCore.Models;
 
@@ -12,6 +13,10 @@ namespace TlpArchitectureCore.Models;
 /// </summary>
 public readonly struct MemoryQuota
 {
+    public static HostingPool DefaultPool
+    {
+        get; set;
+    }
     public Guid Id
     {
         get;
@@ -26,7 +31,7 @@ public readonly struct MemoryQuota
         get;
     }
 
-    public MemoryQuota(int ram, int disk)
+    internal MemoryQuota(int ram, int disk)
     {
         Ram = ram;
         Disk = disk;

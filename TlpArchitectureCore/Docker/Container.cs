@@ -12,12 +12,12 @@ public abstract class Container : IDisposable
     private DockerProcess _mainDockerProcess = null!;
     protected Subject<string?> logSubject = new();
 
-    public Container(ProjectContext projectContext)
+    public Container(Project projectContext)
     {
         ProjectContext = projectContext;
         MainDockerProcess = CreateDefaultDockerProcess();
     }
-    public ProjectContext ProjectContext
+    public Project ProjectContext
     {
         get;
     }

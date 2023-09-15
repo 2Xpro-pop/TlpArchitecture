@@ -12,7 +12,7 @@ public class AspNetCoreDockerFileBuilder : DockerFileBuilder
         get; 
     } 
 
-    public AspNetCoreDockerFileBuilder(ProjectContext projectContext, string buildPath, string dllName) : base(projectContext, buildPath)
+    public AspNetCoreDockerFileBuilder(Project projectContext, string buildPath, string dllName) : base(projectContext, buildPath)
     {
         DllName = dllName;
     }

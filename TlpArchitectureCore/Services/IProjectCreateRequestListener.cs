@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TlpArchitectureCore.Models;
 
 namespace TlpArchitectureCore.Services;
-public interface IQuotaService
+public interface IProjectCreateRequestListener: IDisposable
 {
-    public Task<Quota?> FindByIdAsync(int id);
+    public Task<bool> HandleAsync(ProjectCreationMessage projectCreationMessage);
 }

@@ -4,11 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using TlpArchitectureCore.Docker;
 using TlpArchitectureCore.Models;
 
 namespace TlpArchitectureCore;
+
+[BsonIgnoreExtraElements]
 public class Project
 {
     [BsonId]
@@ -38,8 +41,27 @@ public class Project
         set;
     }
 
+    public Quota Quota
+    {
+        get;
+        set;
+    } = null!;
+
+    public bool IsPublicDomain
+    {
+        get;
+        set;
+    }
+
+    public string Domain
+    {
+        get;
+        set;
+    } = null!;
+
     public ObservableCollection<Container> Containers
     {
         get;
     } = new();
+
 }

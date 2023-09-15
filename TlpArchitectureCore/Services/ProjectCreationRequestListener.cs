@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using RabbitMQ.Client;
 using TlpArchitectureCore.HostedService;
 using TlpArchitectureCore.Models;
@@ -80,13 +81,35 @@ public sealed class ProjectCreationRequestListener : IProjectCreateRequestListen
         {
             Id = Guid.NewGuid(),
             Name = projectCreationMessage.Name,
-            MemoryQuota = memoryQuota
+            MemoryQuota = memoryQuota,
+            Quota = quota,
+            IsPublicDomain = projectCreationMessage.IsPublicDomain,
+            Domain = projectCreationMessage.ProjectDomain,
         };
 
         using var scope = _serviceScopeFactory.CreateScope();
-        var projectCollection = scope.ServiceProvider.GetRequiredService<IProjectService>();
+        var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
 
-        await projectCollection.CreateProjectAsync(project);
+        if (await projectService.IsUniqueDomain(project))
+        {
+            _logger.LogError("Project with domain {ProjectDomain} already exists", projectCreationMessage.ProjectDomain);
+
+            message = new ProjectCreationResultMessage()
+            {
+                Id = projectCreationMessage.Id,
+                IsSuccess = false,
+                Message = $"Project with domain {projectCreationMessage.ProjectDomain} already exists"
+            };
+
+            _channel.BasicPublish(exchange: string.Empty,
+                                  RabbitMqListener.ProjectCreationResultsQueue,
+                                  basicProperties: null,
+                                  message.ToJsonBody());
+
+            return false;
+        }
+
+        await projectService.CreateProjectAsync(project);
 
         message = new ProjectCreationResultMessage()
         {
@@ -103,7 +126,6 @@ public sealed class ProjectCreationRequestListener : IProjectCreateRequestListen
         _logger.LogInformation("Project {ProjectName} created", projectCreationMessage.Name);
 
         return true;
-
 
     }
 

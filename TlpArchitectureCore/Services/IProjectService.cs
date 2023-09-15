@@ -12,4 +12,6 @@ public interface IProjectService
     public Task<bool> CreateProjectAsync(Project project);
     public Task<bool> DeleteProjectAsync(Guid id);
     public Task<bool> UpdateProjectAsync(Project project);
+    public Task<bool> IsUniqueDomain(Project project);
+    public Task<bool> IsUniqueDomain(string domain);
 }

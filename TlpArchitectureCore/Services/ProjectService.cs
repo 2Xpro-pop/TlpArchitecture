@@ -53,10 +53,28 @@ public class ProjectService : IProjectService
 
     public async Task<bool> UpdateProjectAsync(Project project)
     {
+        if (!await IsUniqueDomain(project))
+        {
+            return false;
+        }
         var collection = _mongoDb.GetCollection<Project>("projects");
 
         var result = await collection.ReplaceOneAsync(p => p.Id == project.Id, project);
 
         return result.ModifiedCount > 0;
+    }
+
+    public Task<bool> IsUniqueDomain(Project project)
+    {
+        return IsUniqueDomain(project.Domain);
+    }
+
+    public async Task<bool> IsUniqueDomain(string domain)
+    {
+        var collection = _mongoDb.GetCollection<Project>("projects");
+
+        var result = await collection.Find(p => p.Domain == domain).FirstOrDefaultAsync();
+
+        return result == null;
     }
 }

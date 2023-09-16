@@ -10,41 +10,41 @@ namespace TlpArchitectureCore.Docker;
 public abstract class Container : IDisposable
 {
     private DockerProcess _mainDockerProcess = null!;
-    protected Subject<string?> logSubject = new();
+    protected Subject<string> logSubject = new();
 
-    public Container(Project projectContext)
+    public Container(ProjectInfo projectContext)
     {
         ProjectContext = projectContext;
         MainDockerProcess = CreateDefaultDockerProcess();
     }
-    public Project ProjectContext
+    public ProjectInfo ProjectContext
     {
         get;
     }
-    public abstract string Name
+    public virtual string Name
     {
-        get;
+        get; protected set;
     }
-    public abstract string Image
+    public virtual string Image
     {
-        get; set;
+        get; protected set;
     }
-    public abstract int RamUsage
-    {
-        get; set;
-    }
-    public abstract int DiskUsage
+    public virtual int RamUsage
     {
         get; set;
     }
-    public abstract string BuildPath
+    public virtual int DiskUsage
+    {
+        get; set;
+    }
+    public virtual string BuildPath
     {
         get; set;
     }
     /// <summary>
     /// Logs from docker process
     /// </summary>
-    public virtual IObservable<string?> InternalLogs => logSubject;
+    public virtual IObservable<string> InternalLogs => logSubject;
 
     protected DockerProcess MainDockerProcess
     {
@@ -115,6 +115,18 @@ public abstract class Container : IDisposable
 
         IsStarted = false;
         MainDockerProcess = null!;
+    }
+
+    public async virtual Task<string> GetIp()
+    {
+        var process = new DockerProcess("inspect", $"--format='{{{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}}}' {Name}");
+        process.Start();
+
+        await process.WaitForExitAsync();
+
+        var output = await process.StandardOutput.ReadToEndAsync();
+
+        return output.Replace("'", "");
     }
 
     protected virtual void Log(string? message) => logSubject.OnNext(message);

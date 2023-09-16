@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TlpArchitectureCore.Docker;
 public abstract class DockerFileBuilder
 {
-    public Project ProjectContext
+    public ProjectInfo ProjectContext
     {
         get;
     }
@@ -17,7 +17,7 @@ public abstract class DockerFileBuilder
         get;
     }
 
-    public DockerFileBuilder(Project projectContext, string buildPath)
+    public DockerFileBuilder(ProjectInfo projectContext, string buildPath)
     {
         ProjectContext = projectContext;
         BuildPath = buildPath;

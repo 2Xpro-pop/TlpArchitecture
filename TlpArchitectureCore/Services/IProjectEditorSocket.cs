@@ -12,7 +12,7 @@ public interface IProjectEditorSocket: IDisposable
     {
         get;
     }
-    public Project ProjectContext
+    public ProjectInfo ProjectContext
     {
         get;
     }

@@ -21,6 +21,18 @@ public class DockerProcess : Process
     public static DockerProcess CreateDefault(string name, int ramUsage, int diskUsage, string image) =>
         new("run", $"--name {name} -m {ramUsage}m --storage-opt size={diskUsage}m {image}");
 
+    public static DockerProcess CreateFromImage(string name, string image, Dictionary<string, string> enviroments)
+    {
+        var arguments = $"--name {name} ";
+        foreach (var (key, value) in enviroments)
+        {
+            arguments += $"-e {key}={value} ";
+        }
+        arguments += image;
+
+        return new DockerProcess("run", arguments);
+    }
+
     public static async Task<int> GetMomoryUsage(string containerName)
     {
         var process = new DockerProcess("stats", containerName);
@@ -36,4 +48,5 @@ public class DockerProcess : Process
 
         return int.Parse(memory.Replace("MiB", ""));
     }
+
 }

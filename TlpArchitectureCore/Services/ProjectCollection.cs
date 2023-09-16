@@ -6,19 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TlpArchitectureCore.Services;
-public class ProjectCollection: ICollection<Project>
+public class ProjectCollection: ICollection<ProjectInfo>
 {
-    private readonly List<Project> _projects = new();
+    private readonly List<ProjectInfo> _projects = new();
 
-    public int Count => ((ICollection<Project>)_projects).Count;
+    public int Count => ((ICollection<ProjectInfo>)_projects).Count;
 
-    public bool IsReadOnly => ((ICollection<Project>)_projects).IsReadOnly;
+    public bool IsReadOnly => ((ICollection<ProjectInfo>)_projects).IsReadOnly;
 
-    public void Add(Project item) => ((ICollection<Project>)_projects).Add(item);
-    public void Clear() => ((ICollection<Project>)_projects).Clear();
-    public bool Contains(Project item) => ((ICollection<Project>)_projects).Contains(item);
-    public void CopyTo(Project[] array, int arrayIndex) => ((ICollection<Project>)_projects).CopyTo(array, arrayIndex);
-    public IEnumerator<Project> GetEnumerator() => ((IEnumerable<Project>)_projects).GetEnumerator();
-    public bool Remove(Project item) => ((ICollection<Project>)_projects).Remove(item);
+    public void Add(ProjectInfo item) => ((ICollection<ProjectInfo>)_projects).Add(item);
+    public void Clear() => ((ICollection<ProjectInfo>)_projects).Clear();
+    public bool Contains(ProjectInfo item) => ((ICollection<ProjectInfo>)_projects).Contains(item);
+    public void CopyTo(ProjectInfo[] array, int arrayIndex) => ((ICollection<ProjectInfo>)_projects).CopyTo(array, arrayIndex);
+    public IEnumerator<ProjectInfo> GetEnumerator() => ((IEnumerable<ProjectInfo>)_projects).GetEnumerator();
+    public bool Remove(ProjectInfo item) => ((ICollection<ProjectInfo>)_projects).Remove(item);
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_projects).GetEnumerator();
 }

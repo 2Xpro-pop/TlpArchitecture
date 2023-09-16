@@ -12,7 +12,7 @@ using TlpArchitectureCore.Models;
 namespace TlpArchitectureCore;
 
 [BsonIgnoreExtraElements]
-public class Project
+public class ProjectInfo
 {
     [BsonId]
     public Guid Id
@@ -28,6 +28,7 @@ public class Project
         set;
     } = null!;
 
+    [BsonIgnore]
     public bool IsStarted
     {
         get;

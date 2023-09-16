@@ -77,7 +77,7 @@ public sealed class ProjectCreationRequestListener : IProjectCreateRequestListen
             return false;
         }
 
-        var project = new Project
+        var project = new ProjectInfo
         {
             Id = Guid.NewGuid(),
             Name = projectCreationMessage.Name,
@@ -90,7 +90,7 @@ public sealed class ProjectCreationRequestListener : IProjectCreateRequestListen
         using var scope = _serviceScopeFactory.CreateScope();
         var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
 
-        if (await projectService.IsUniqueDomain(project))
+        if (!await projectService.IsUniqueDomain(project))
         {
             _logger.LogError("Project with domain {ProjectDomain} already exists", projectCreationMessage.ProjectDomain);
 

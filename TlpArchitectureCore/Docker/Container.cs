@@ -115,7 +115,7 @@ public abstract class Container : IDisposable
             throw new InvalidOperationException("Docker process not started");
         }
 
-        await Task.Delay(400, cancellationToken);
+        await Task.Delay(100, cancellationToken);
 
         if (MainDockerProcess.HasExited)
         {

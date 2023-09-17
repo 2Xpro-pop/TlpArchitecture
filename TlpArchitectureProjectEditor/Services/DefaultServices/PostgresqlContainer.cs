@@ -31,6 +31,7 @@ public class PostgresqlContainer : Container
 
     protected override DockerProcess CreateDefaultDockerProcess()
     {
+        
         return DockerProcess.CreateWithEnviroments(ModifiedName, MaxRamUsage, MaxDiskUsage, Ip, "postgres", new Dictionary<string, string>()
         {
             ["POSTGRES_USER"] = PostgressUser,

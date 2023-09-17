@@ -46,7 +46,7 @@ public class ProjectStarter : BackgroundService
                     ProjectId = project.Id,
                 };
 
-                if (!projectContextService.TryActivate(projectContext))
+                if (! await projectContextService.TryActivate(projectContext))
                 {
                     channel.BasicPublish("", "Project Activate Results", null, Encoding.UTF8.GetBytes($"Project {project.Id} already activated"));
                 }

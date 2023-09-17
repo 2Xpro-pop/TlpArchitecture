@@ -5,7 +5,7 @@ namespace TlpArchitectureCore.Models;
 public class User
 {
     [BsonId]
-    public int Id
+    public Guid Id
     {
         get; set;
     }
@@ -19,4 +19,9 @@ public class User
     {
         get; set;
     } = null!;
+
+    public User()
+    {
+        Id = Guid.NewGuid();
+    }
 }

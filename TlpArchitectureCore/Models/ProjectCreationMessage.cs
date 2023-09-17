@@ -32,10 +32,10 @@ public class ProjectCreationMessage: Message
         get; set;
     }
 
-    public int[] Users
+    public Guid[] Users
     {
         get; set;
-    } = Array.Empty<int>();
+    } = Array.Empty<Guid>();
 
     public int QuotaId
     {

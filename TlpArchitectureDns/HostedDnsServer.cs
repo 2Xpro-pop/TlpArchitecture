@@ -9,6 +9,7 @@ using DNS.Protocol.ResourceRecords;
 using DNS.Server;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TlpArchitecture.Services;
 
 namespace TlpArchitecture;
 public class HostedDnsServer : BackgroundService
@@ -28,6 +29,10 @@ public class HostedDnsServer : BackgroundService
         dnsServer.Requested += (sender, args) =>
         {
             _logger.LogInformation("Request from {remote}", args.Remote);
+            if (_requestResolver is RequestResolver resolver)
+            {
+                resolver.RemoteIp = args.Remote.ToString();
+            }
         };
 
         dnsServer.Responded += (sender, args) =>

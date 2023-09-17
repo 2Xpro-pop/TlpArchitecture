@@ -1,4 +1,6 @@
 using TlpArchitectureCore.Extensions;
+using TlpArchitectureCore.Options;
+using TlpArchitectureCore.Services;
 using TlpArchitectureCoreServer.Options;
 using TlpArchitectureCoreServer.Services;
 
@@ -11,7 +13,12 @@ var authSection = builder.Configuration.GetSection("AuthOptions");
 var authOptions = authSection.Get<AuthOptions>() ??
     throw new NullReferenceException("AuthOptions is not set");
 
+var hostingOptionsSection = builder.Configuration.GetSection(nameof(HostingOptions));
+
+builder.Services.Configure<HostingOptions>(hostingOptionsSection);
+
 builder.Services.AddMongoDb(mongoDbConnectionString);
+builder.Services.AddRabbitMqConnection();
 
 builder.Services.AddControllers();
 
@@ -38,9 +45,9 @@ builder.Services.Configure<AuthOptions>(authSection);
 
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddSingleton<IPasswordHasher,PasswordHasher>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-
+builder.Services.AddScoped<IProjectRequestService, ProjectRequestService>();
 
 var app = builder.Build();
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TlpArchitectureCore.Models;
-public class ProjectCreationMessage
+public class ProjectCreationMessage: Message
 {
     public int Id
     {

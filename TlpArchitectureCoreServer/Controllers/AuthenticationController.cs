@@ -14,13 +14,11 @@ namespace TlpArchitectureCoreServer.Controllers;
 [Route("api/[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly AuthOptions _authOptions;
     private readonly IAuthService _authService;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public AuthenticationController(IOptions<AuthOptions> authOptions, IAuthService authService, IJwtTokenGenerator jwtTokenGenerator)
+    public AuthenticationController(IAuthService authService, IJwtTokenGenerator jwtTokenGenerator)
     {
-        _authOptions = authOptions.Value;
         _authService = authService;
         _jwtTokenGenerator = jwtTokenGenerator;
     }

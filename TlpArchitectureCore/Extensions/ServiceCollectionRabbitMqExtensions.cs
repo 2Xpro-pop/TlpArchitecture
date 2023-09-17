@@ -13,8 +13,25 @@ using TlpArchitectureCore.Options;
 using TlpArchitectureCore.Services;
 
 namespace TlpArchitectureCore.Extensions;
-public static class ServiceCollectionRabbitMqListenerExtensions
+public static class ServiceCollectionRabbitMqExtensions
 {
+    public static IServiceCollection AddRabbitMqConnection(this IServiceCollection services)
+    {
+        services.TryAddSingleton(services =>
+        {
+            var hostingOptions = services.GetRequiredService<IOptions<HostingOptions>>();
+
+            var factory = new ConnectionFactory
+            {
+
+                HostName = hostingOptions.Value.RabbitMqHost
+            };
+
+            return factory.CreateConnection();
+        });
+
+        return services;
+    }
     public static IServiceCollection AddRabbitMqListener(this IServiceCollection services, IConfiguration? hostingOptions = null)
     {
         if (hostingOptions != null)
@@ -28,19 +45,9 @@ public static class ServiceCollectionRabbitMqListenerExtensions
                 options.RabbitMqHost = "localhost";
             });
         }
-        
 
-        services.TryAddSingleton(services =>
-        {
-            var hostingOptions = services.GetRequiredService<IOptions<HostingOptions>>();
 
-            var factory = new ConnectionFactory
-            {
-                HostName = hostingOptions.Value.RabbitMqHost
-            };
-
-            return factory.CreateConnection();
-        });
+        services.AddRabbitMqConnection();
 
         services.AddHostedService<RabbitMqListener>();
 

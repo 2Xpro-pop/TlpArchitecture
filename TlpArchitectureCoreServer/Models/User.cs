@@ -5,7 +5,7 @@ namespace TlpArchitectureCoreServer.Models;
 public class User
 {
     [BsonId]
-    public Guid Id
+    public int Id
     {
         get; set;
     }

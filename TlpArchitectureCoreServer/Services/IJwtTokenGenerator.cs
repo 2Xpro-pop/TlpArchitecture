@@ -1,4 +1,4 @@
-﻿using TlpArchitectureCoreServer.Models;
+﻿using TlpArchitectureCore.Models;
 
 namespace TlpArchitectureCoreServer.Services;
 public interface IJwtTokenGenerator

@@ -2,7 +2,6 @@
 using RabbitMQ.Client;
 using TlpArchitectureCore.HostedService;
 using TlpArchitectureCore.Models;
-using TlpArchitectureCoreServer.Models;
 
 namespace TlpArchitectureCoreServer.Services;
 

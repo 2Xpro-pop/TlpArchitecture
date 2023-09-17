@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TlpArchitectureCoreServer.Models;
+using TlpArchitectureCore.Services;
 using TlpArchitectureCoreServer.Options;
 using TlpArchitectureCoreServer.Services;
 using TlpArchitectureCoreServer.ViewModels;
@@ -39,7 +39,6 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] AuthRequest request)
     {
-
         await _authService.CreateUser(request.Username, request.Password);
 
         return Ok();

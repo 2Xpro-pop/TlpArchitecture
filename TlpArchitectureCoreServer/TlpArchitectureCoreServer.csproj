@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TlpArchitectureCore\TlpArchitectureCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

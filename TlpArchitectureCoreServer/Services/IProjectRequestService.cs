@@ -1,5 +1,4 @@
 ﻿using TlpArchitectureCore.Models;
-using TlpArchitectureCoreServer.Models;
 
 namespace TlpArchitectureCoreServer.Services;
 public interface IProjectRequestService

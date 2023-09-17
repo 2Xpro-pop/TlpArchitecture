@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-using TlpArchitectureCoreServer.Models;
+using TlpArchitectureCore.Models;
 
 namespace TlpArchitectureCoreServer.Services;
 
@@ -44,7 +44,6 @@ public class AuthService : IAuthService
 
         var user = new User
         {
-            Id = Guid.NewGuid(),
             Username = username,
             PasswordHash = _passwordHasher.Hash(password)
         };

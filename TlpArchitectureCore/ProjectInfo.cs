@@ -60,9 +60,5 @@ public class ProjectInfo
         set;
     } = null!;
 
-    public ObservableCollection<Container> Containers
-    {
-        get;
-    } = new();
 
 }

@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace TlpArchitectureCoreServer.Models;
+namespace TlpArchitectureCore.Models;
 
 public class User
 {

@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using TlpArchitectureCoreServer.Models;
+using TlpArchitectureCore.Models;
 using TlpArchitectureCoreServer.Options;
 
 namespace TlpArchitectureCoreServer.Services;

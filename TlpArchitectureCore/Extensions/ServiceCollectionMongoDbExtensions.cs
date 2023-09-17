@@ -4,33 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace TlpArchitectureCore.Extensions;
 public static class ServiceCollectionMongoDbExtensions
 {
-    public static IServiceCollection AddMongoDb(this IServiceCollection services, string connectionString)
-    {
-        services.AddScoped<IMongoClient>(provider => new MongoClient(connectionString));
-        services.AddScoped<IMongoDatabase>(provider =>
-        {
-            var client = provider.GetRequiredService<IMongoClient>();
-            return client.GetDatabase("tlp");
-        });
-
-        return services;
-    }
-
-    public static IServiceCollection AddMongoDb(this IServiceCollection services, Action<MongoClientSettings>? settingsAction = null)
+    public static IServiceCollection AddMongoDb(this IServiceCollection services, string connectionString, Action<MongoClientSettings>? settingsAction = null)
     {
         services.AddScoped<IMongoClient>(provider =>
         {
-            var settings = new MongoClientSettings();
+            var settings = MongoClientSettings.FromConnectionString(connectionString);
             settingsAction?.Invoke(settings);
-            return new MongoClient(settings);
-        });
 
+            settings.LoggingSettings = new(provider.GetRequiredService<ILoggerFactory>());
+
+            var client = new MongoClient(settings);
+
+            return client;
+        });
         services.AddScoped<IMongoDatabase>(provider =>
         {
             var client = provider.GetRequiredService<IMongoClient>();
@@ -40,3 +33,4 @@ public static class ServiceCollectionMongoDbExtensions
         return services;
     }
 }
+

@@ -16,11 +16,13 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IUserService _userService;
 
-    public AuthenticationController(IAuthService authService, IJwtTokenGenerator jwtTokenGenerator)
+    public AuthenticationController(IAuthService authService, IJwtTokenGenerator jwtTokenGenerator, IUserService userService)
     {
         _authService = authService;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _userService = userService;
     }
 
     [HttpPost("login")]
@@ -31,7 +33,7 @@ public class AuthenticationController : ControllerBase
             return new UnauthorizedResult();
         }
 
-        var user = await _authService.GetUser(request.Username)!;
+        var user = await _userService.GetUser(request.Username);
 
         return Ok(_jwtTokenGenerator.GenerateTokenForUser(user));
     }

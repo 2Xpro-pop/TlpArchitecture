@@ -10,16 +10,18 @@ public class AuthService : IAuthService
 {
     private readonly IMongoDatabase _database;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IUserService _userService;
 
-    public AuthService(IMongoDatabase database, IPasswordHasher passwordHasher)
+    public AuthService(IMongoDatabase database, IPasswordHasher passwordHasher, IUserService userService)
     {
         _database = database;
         _passwordHasher = passwordHasher;
+        _userService = userService;
     }
 
     public async Task<bool> ValidateUser(string username, string password)
     {
-        var user = await GetUser(username);
+        var user = await _userService.GetUser(username);
 
         if (user == null)
         {
@@ -29,13 +31,6 @@ public class AuthService : IAuthService
         return _passwordHasher.Verify(password, user.PasswordHash);
     }
 
-    public async Task<User?> GetUser(string username)
-    {
-        var users = _database.GetCollection<User>("users");
-        var user = await users.Find(u => u.Username == username).FirstOrDefaultAsync();
-
-        return user;
-    }
 
     public async Task<User> CreateUser(string username, string password)
     {

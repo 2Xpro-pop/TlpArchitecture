@@ -11,18 +11,20 @@ public class ProjectRequestsController : ControllerBase
 {
     private readonly IProjectRequestService _projectRequestService;
     private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public ProjectRequestsController(IProjectRequestService projectRequestService, IAuthService authService)
+    public ProjectRequestsController(IProjectRequestService projectRequestService, IAuthService authService, IUserService userService)
     {
         _projectRequestService = projectRequestService;
         _authService = authService;
+        _userService = userService;
     }
 
     [HttpGet]
     [Authorize]
     public async Task<IEnumerable<ProjectCreationMessage>> GetAllProjectRequests()
     {
-        var user = await _authService.GetUser(User.Identity!.Name!);
+        var user = await _userService.GetUser(User.Identity!.Name!);
 
         return user == null ? Array.Empty<ProjectCreationMessage>() : await _projectRequestService.GetAllProjectsForUser(user);
     }
@@ -31,7 +33,7 @@ public class ProjectRequestsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> RequestProject([FromBody] ProjectCreationMessage projectCreationMessage)
     {
-        var user = await _authService.GetUser(User.Identity!.Name!);
+        var user = await _userService.GetUser(User.Identity!.Name!);
 
         if (user == null)
         {

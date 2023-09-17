@@ -52,9 +52,9 @@ public class ServiceStartInfoService : IServiceStartInfosService
         var collection = _database.GetCollection<ServiceStartInfo>(ServiceStartInfoCollectionName);
         var services = await collection.Find(_ => true).ToListAsync();
         var duplicates = services.GroupBy(x => x.IpAddress).Where(x => x.Count() > 1).SelectMany(x => x.Skip(1)).ToList();
+        
         foreach (var duplicate in duplicates)
         {
-
             await collection.DeleteOneAsync(x => x.Id == duplicate.Id);
         }
 

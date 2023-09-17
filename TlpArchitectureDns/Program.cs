@@ -18,6 +18,7 @@ var mongoDbConnectionString = builder.Configuration.GetConnectionString("MongoDb
 var hostingOptionsSection = builder.Configuration.GetSection(nameof(HostingOptions));
 
 builder.Services.AddMongoDb(mongoDbConnectionString);
+builder.Services.AddProjectEditor();
 
 builder.Services.Configure<HostingOptions>(hostingOptionsSection);
 

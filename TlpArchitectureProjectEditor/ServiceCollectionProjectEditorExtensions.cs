@@ -8,12 +8,15 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using TlpArchitectureCore.Services;
 using TlpArchitectureProjectEditor.Services;
 
-namespace TlpArchitectureCore.Extensions;
+namespace TlpArchitectureProjectEditor.Extensions;
 public static class ServiceCollectionProjectEditorExtensions
 {
     public static IServiceCollection AddProjectEditor(this IServiceCollection services)
     {
         services.AddScoped<IServiceFactory, ServiceFactory>();
+        services.AddScoped<ILinkService, LinkService>();
+        services.AddScoped<IIpAddressesPool, IpAddressesPool>();
+
 
         return services;
     }

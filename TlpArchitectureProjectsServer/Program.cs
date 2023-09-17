@@ -17,6 +17,7 @@ builder.Services.AddMongoDb(mongoDbConnectionString);
 var hostingOptions = builder.Configuration.GetSection(nameof(HostingOptions));
 
 builder.Services.AddSingleton<IQuotaService, FakerQuotaService>();
+
 builder.Services.AddRabbitMqListener(hostingOptions);
 builder.Services.AddProjectEditor();
 

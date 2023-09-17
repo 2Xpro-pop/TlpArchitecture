@@ -7,7 +7,7 @@ using TlpArchitectureCore;
 using TlpArchitectureCore.Docker;
 
 namespace TlpArchitectureProjectEditor.Services.DefaultServices;
-internal class PostgresqlContainer : Container
+public class PostgresqlContainer : Container
 {
     public string PostgressUser
     {
@@ -24,11 +24,14 @@ internal class PostgresqlContainer : Container
         Name = serviceStartInfo.Name;
         PostgressUser = (string)serviceStartInfo.Properties[nameof(PostgressUser)];
         PostgressPassword = (string)serviceStartInfo.Properties[nameof(PostgressPassword)];
+        MaxDiskUsage = serviceStartInfo.DiskUsage;
+        MaxRamUsage = serviceStartInfo.RamUsage;
+        Ip = serviceStartInfo.IpAddress;
     }
 
     protected override DockerProcess CreateDefaultDockerProcess()
     {
-        return DockerProcess.CreateFromImage(Name,"postgres", new Dictionary<string, string>()
+        return DockerProcess.CreateWithEnviroments(ModifiedName, MaxRamUsage, MaxDiskUsage, Ip, "postgres", new Dictionary<string, string>()
         {
             ["POSTGRES_USER"] = PostgressUser,
             ["POSTGRES_PASSWORD"] = PostgressPassword

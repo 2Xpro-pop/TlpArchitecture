@@ -37,12 +37,18 @@ public class ServiceStartInfo
         get; set;
     }
 
+    /// <summary>
+    /// in megabytes
+    /// </summary>
     public int DiskUsage
     {
         get; set;
     }
 
-    public int MemoryUsage
+    /// <summary>
+    /// in megabytes
+    /// </summary>
+    public int RamUsage
     {
         get; set;
     }

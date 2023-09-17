@@ -29,7 +29,7 @@ public sealed class ProjectContext
 
     public int CurrentDiskUsage => ServiceStartInfos.Sum(x => x.DiskUsage);
 
-    public int CurrentMemoryUsage => ServiceStartInfos.Sum(x => x.MemoryUsage);
+    public int CurrentMemoryUsage => ServiceStartInfos.Sum(x => x.RamUsage);
 
     public List<ServiceStartInfo> ServiceStartInfos
     {

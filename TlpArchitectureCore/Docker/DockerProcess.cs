@@ -12,22 +12,31 @@ public class DockerProcess : Process
     {
         StartInfo.FileName = "docker";
         StartInfo.Arguments = $"{command} {arguments}";
-        StartInfo.UseShellExecute = true;
         StartInfo.RedirectStandardOutput = true;
         StartInfo.RedirectStandardError = true;
-        StartInfo.CreateNoWindow = true;
+        StartInfo.CreateNoWindow = false;
     }
 
     public static DockerProcess CreateDefault(string name, int ramUsage, int diskUsage, string image) =>
         new("run", $"--name {name} -m {ramUsage}m --storage-opt size={diskUsage}m {image}");
 
-    public static DockerProcess CreateFromImage(string name, string image, Dictionary<string, string> enviroments)
+    public static DockerProcess CreateWithEnviroments(string name, int ramUsage, int diskUsage, string ip, string image, Dictionary<string, string> enviroments)
     {
         var arguments = $"--name {name} ";
-        foreach (var (key, value) in enviroments)
+        foreach (var kv in enviroments)
         {
-            arguments += $"-e {key}={value} ";
+            arguments += $"-e {kv.Key}={kv.Value} ";
         }
+#if XFS_SUPPORT
+        arguments += $"-m {ramUsage}m --storage-opt size={diskUsage}m ";
+#else
+        arguments += $"-m {ramUsage}m ";
+#endif
+        if (!string.IsNullOrWhiteSpace(ip))
+        {
+            arguments += $"--net tlparchitecture --ip {ip} ";
+        }
+
         arguments += image;
 
         return new DockerProcess("run", arguments);

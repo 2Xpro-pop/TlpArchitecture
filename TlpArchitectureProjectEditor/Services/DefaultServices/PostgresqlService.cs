@@ -14,6 +14,7 @@ public class PostgresqlService : IService
     public PostgresqlService(ServiceStartInfo startInfo)
     {
         StartInfo = startInfo;
+        Ip = startInfo.IpAddress;
     }
 
     public ServiceStartInfo StartInfo
@@ -24,7 +25,12 @@ public class PostgresqlService : IService
     public IObservable<string> Logs => _container.InternalLogs;
 
     public IObservable<string> Errors => _errors;
-    private readonly Subject<string> _errors = new();
+    private readonly ReplaySubject<string> _errors = new();
+
+    public string? Error
+    {
+        get; set;
+    }
 
     public bool IsWork
     {
@@ -36,13 +42,19 @@ public class PostgresqlService : IService
         get; set;
     } = null!;
 
-    public async Task StartAsync()
+    public async Task<bool> StartAsync()
     {
         _container = new(StartInfo);
 
-        await _container.StartProcessAsync(CancellationToken.None);
+        _container.InternalErrors.Subscribe(_errors.OnNext);
 
-        IsWork = true;
-        Ip = await _container.GetIp();
+        IsWork = await _container.StartProcessAsync(CancellationToken.None);
+
+        if (!IsWork)
+        {
+            Error = _container.InternalError;
+        }
+
+        return IsWork;
     }
 }

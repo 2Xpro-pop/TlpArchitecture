@@ -20,6 +20,11 @@ public interface IService
         get;
     }
 
+    public string? Error
+    {
+        get;
+    }
+
     public bool IsWork
     {
         get;
@@ -34,5 +39,5 @@ public interface IService
     /// Also can restart service
     /// </summary>
     /// <returns></returns>
-    public Task StartAsync();
+    public Task<bool> StartAsync();
 }

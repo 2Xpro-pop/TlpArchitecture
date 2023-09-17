@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TlpArchitectureCore\TlpArchitectureCore.csproj" />
+    <ProjectReference Include="..\TlpArchitectureProjectEditor\TlpArchitectureProjectEditor.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,11 +11,11 @@ public abstract class Container : IDisposable
 {
     private DockerProcess _mainDockerProcess = null!;
     protected Subject<string> logSubject = new();
+    protected ReplaySubject<string> errorSubject = new();
 
     public Container(ProjectInfo projectContext)
     {
         ProjectContext = projectContext;
-        MainDockerProcess = CreateDefaultDockerProcess();
     }
     public ProjectInfo ProjectContext
     {
@@ -25,15 +25,20 @@ public abstract class Container : IDisposable
     {
         get; protected set;
     }
+    public virtual string ModifiedName => $"{ProjectContext.Domain}.{Name}";
     public virtual string Image
     {
         get; protected set;
     }
-    public virtual int RamUsage
+    public virtual int MaxRamUsage
     {
         get; set;
     }
-    public virtual int DiskUsage
+    public virtual int MaxDiskUsage
+    {
+        get; set;
+    }
+    public virtual string Ip
     {
         get; set;
     }
@@ -45,23 +50,41 @@ public abstract class Container : IDisposable
     /// Logs from docker process
     /// </summary>
     public virtual IObservable<string> InternalLogs => logSubject;
+    public virtual IObservable<string> InternalErrors => errorSubject;
+    public virtual string? InternalError
+    {
+        get; protected set;
+    }
 
     protected DockerProcess MainDockerProcess
     {
         get => _mainDockerProcess;
         set
         {
+            if (_mainDockerProcess == value)
+            {
+                return;
+            }
             if (IsStarted)
             {
                 throw new InvalidOperationException("Container already started");
             }
+
+            if (_mainDockerProcess != null)
+            {
+                _mainDockerProcess.OutputDataReceived -= (sender, args) => Log(args.Data);
+                _mainDockerProcess.ErrorDataReceived -= (sender, args) => errorSubject.OnNext(args.Data);
+            }
+
             _mainDockerProcess = value;
 
             if (_mainDockerProcess == null)
             {
                 return;
             }
+
             _mainDockerProcess.OutputDataReceived += (sender, args) => Log(args.Data);
+            _mainDockerProcess.ErrorDataReceived += (sender, args) => errorSubject.OnNext(args.Data);
         }
     }
 
@@ -83,11 +106,25 @@ public abstract class Container : IDisposable
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public virtual Task StartProcessAsync(CancellationToken cancellationToken)
+    public async virtual Task<bool> StartProcessAsync(CancellationToken cancellationToken)
     {
+        MainDockerProcess = CreateDefaultDockerProcess();
+
         if (!MainDockerProcess.Start())
         {
             throw new InvalidOperationException("Docker process not started");
+        }
+
+        await Task.Delay(400, cancellationToken);
+
+        if (MainDockerProcess.HasExited)
+        {
+            InternalError = await MainDockerProcess.StandardError.ReadToEndAsync(cancellationToken);
+            IsStarted = false;
+            MainDockerProcess = null!;
+
+            IsStarted = false;
+            return false;
         }
 
         MainDockerProcess.BeginOutputReadLine();
@@ -95,7 +132,7 @@ public abstract class Container : IDisposable
 
         IsStarted = true;
 
-        return Task.CompletedTask;
+        return true;
     }
 
     /// <summary>
@@ -117,31 +154,16 @@ public abstract class Container : IDisposable
         MainDockerProcess = null!;
     }
 
-    public async virtual Task<string> GetIp()
-    {
-        var process = new DockerProcess("inspect", $"--format='{{{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}}}' {Name}");
-        process.Start();
-
-        await process.WaitForExitAsync();
-
-        var output = await process.StandardOutput.ReadToEndAsync();
-
-        return output.Replace("'", "");
-    }
-
     protected virtual void Log(string? message) => logSubject.OnNext(message);
 
     protected async virtual Task RestartContainer(CancellationToken cancellationToken)
     {
         await StopProcessAsync(cancellationToken);
-
-        MainDockerProcess = CreateDefaultDockerProcess();
-
         await StartProcessAsync(cancellationToken);
     }
 
     protected virtual DockerProcess CreateDefaultDockerProcess() =>
-        DockerProcess.CreateDefault(Name, RamUsage, DiskUsage, Image);
+        DockerProcess.CreateDefault(Name, MaxRamUsage, MaxDiskUsage, Image);
 
     #region IDisposable Support
     protected virtual void Dispose(bool disposing)
@@ -152,13 +174,16 @@ public abstract class Container : IDisposable
             {
                 // TODO: освободить управляемое состояние (управляемые объекты)
                 logSubject.Dispose();
+                errorSubject.Dispose();
             }
 
             // TODO: освободить неуправляемые ресурсы (неуправляемые объекты) и переопределить метод завершения
 
             // TODO: установить значение NULL для больших полей
+            IsStarted = false;
             MainDockerProcess = null!;
             logSubject = null!;
+            errorSubject = null!;
             Disposed = true;
         }
     }

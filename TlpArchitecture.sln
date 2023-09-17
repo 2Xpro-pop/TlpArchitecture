@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TlpArchitectureCore", "TlpA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TlpArchitectureDns", "TlpArchitectureDns\TlpArchitectureDns.csproj", "{1E324061-82C1-413E-B33C-C8FA5B2DBAF8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TlpArchitectureServer", "TlpArchitectureServer\TlpArchitectureServer.csproj", "{76EF0652-2BB4-4829-B642-F79A33004755}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TlpArchitectureProjectsServer", "TlpArchitectureProjectsServer\TlpArchitectureProjectsServer.csproj", "{76EF0652-2BB4-4829-B642-F79A33004755}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TlpArchitectureProjectEditor", "TlpArchitectureProjectEditor\TlpArchitectureProjectEditor.csproj", "{DAC56FE5-C6AC-4256-9F2A-890C780D20BE}"
 EndProject

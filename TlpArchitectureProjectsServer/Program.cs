@@ -2,7 +2,7 @@ using TlpArchitectureCore.Options;
 using TlpArchitectureCore.Services;
 using TlpArchitectureCore.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using TlpArchitectureServer.Services;
+using TlpArchitectureProjectsServer.Services;
 using TlpArchitectureProjectEditor.Services;
 using TlpArchitectureCore;
 using System.Reactive.Linq;

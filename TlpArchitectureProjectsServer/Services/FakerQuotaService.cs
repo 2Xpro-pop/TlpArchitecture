@@ -1,7 +1,7 @@
 ﻿using TlpArchitectureCore.Models;
 using TlpArchitectureCore.Services;
 
-namespace TlpArchitectureServer.Services;
+namespace TlpArchitectureProjectsServer.Services;
 
 public class FakerQuotaService : IQuotaService
 {

@@ -43,7 +43,6 @@ public class ProjectStarter : BackgroundService
                 {
                     Id = Guid.NewGuid(),
                     Project = project,
-                    ProjectId = project.Id,
                 };
 
                 if (! await projectContextService.TryActivate(projectContext))

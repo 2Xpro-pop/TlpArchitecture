@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 namespace TlpArchitectureCore.Options;
 public class HostingOptions
 {
+    public string InternalIp
+    {
+        get; set;
+    } = null!;
+
+    public int SubnetMask
+    {
+        get; set;
+    } = null!;
+
     public int MaxAvailableRam
     {
         get; set;

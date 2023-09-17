@@ -19,8 +19,14 @@ public sealed class ProjectContext
     [BsonIgnore]
     public ProjectInfo Project
     {
-        get; set;
-    } = null!;
+        get => _projectInfo;
+        set
+        {
+            _projectInfo = value;
+            ProjectId = value.Id;
+        }
+    }
+    private ProjectInfo _projectInfo = null!;
 
     public Guid ProjectId
     {

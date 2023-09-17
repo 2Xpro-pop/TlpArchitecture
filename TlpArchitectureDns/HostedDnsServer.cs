@@ -35,10 +35,6 @@ public class HostedDnsServer : BackgroundService
             _logger.LogInformation("Responded from {remote}", args.Remote);
         };
 
-        dnsServer.Requested += (sender, e) => Console.WriteLine(e.Request);
-        dnsServer.Responded += (sender, e) => Console.WriteLine("{0} => {1}", e.Request, e.Response);
-        dnsServer.Errored += (sender, e) => Console.WriteLine(e.Exception.Message);
-
         _logger.LogInformation("Starting DNS server");
 
         await dnsServer.Listen(ip: IPAddress.Parse("192.168.0.101"));

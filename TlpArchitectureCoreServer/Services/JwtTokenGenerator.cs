@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TlpArchitectureCore.Models;
 using TlpArchitectureCoreServer.Options;
@@ -10,9 +11,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 {
     private readonly AuthOptions _authOptions;
 
-    public JwtTokenGenerator(AuthOptions authOptions)
+    public JwtTokenGenerator(IOptions<AuthOptions> authOptions)
     {
-        _authOptions = authOptions;
+        _authOptions = authOptions.Value;
     }
 
     public string GenerateTokenForUser(User user)
